@@ -41,7 +41,7 @@ document.querySelectorAll('.textanimation').forEach(textElement => {
     splitTimeline.to(textElement.querySelectorAll('span'), {
         y: 0,
         opacity: 1,
-        stagger: 0.04,
+        stagger: 0.07,
         duration: 0.5,
         ease: 'power3.out'
     });

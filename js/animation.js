@@ -13,65 +13,57 @@ document.addEventListener("DOMContentLoaded", function() {
 
   // テキストアニメーション
   // 拆分字符用span包裹
-       function wrapTextNodes(node) {
-        if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
-            const parent = node.parentNode;
-            const text = node.textContent;
-            const fragment = document.createDocumentFragment();
-            text.split('').forEach(char => {
-                const span = document.createElement('span');
-                span.textContent = char;
-                span.style.display = 'inline-block';
-                span.style.opacity = '0';
-                span.style.position = 'relative';
-                fragment.appendChild(span);
-            });
-            parent.replaceChild(fragment, node);
-        } else {
-            Array.from(node.childNodes).forEach(child => wrapTextNodes(child));
-        }
+  function wrapTextNodes(node) {
+    if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
+        const parent = node.parentNode;
+        const text = node.textContent;
+        const fragment = document.createDocumentFragment();
+        text.split('').forEach(char => {
+            const span = document.createElement('span');
+            span.textContent = char;
+            span.style.display = 'inline-block';
+            span.style.opacity = '0';
+            span.style.transform = 'translateY(150%)';
+            fragment.appendChild(span);
+        });
+        parent.replaceChild(fragment, node);
+    } else {
+        Array.from(node.childNodes).forEach(child => wrapTextNodes(child));
+    }
+}
+
+// 处理所有 .textanimation 元素
+document.querySelectorAll('.textanimation').forEach(textElement => {
+    wrapTextNodes(textElement);
+
+    // Y轴浮现
+    const splitTimeline = gsap.timeline({ paused: true });
+    splitTimeline.to(textElement.querySelectorAll('span'), {
+        y: 0,
+        opacity: 1,
+        stagger: 0.04,
+        duration: 0.5,
+        ease: 'power3.out'
+    });
+
+    // 指定视窗口
+    function handleTextAnimation(entries, observer) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                splitTimeline.play(); // 入视口时播放动画
+                observer.unobserve(entry.target); // 停止观察
+            }
+        });
     }
 
-    // 处理所有 .textanimation 元素
-    document.querySelectorAll('.textanimation').forEach(textElement => {
-        wrapTextNodes(textElement);
-
-        // 初始化字符位置(随机)
-        gsap.set(textElement.querySelectorAll('span'), {
-            x: () => Math.random() * 400 - 200, // -200 ~ 200
-            y: () => Math.random() * 400 - 200, // -200 ~ 200
-            opacity: 0
-        });
-
-        // Y轴浮现
-        const splitTimeline = gsap.timeline({ paused: true });
-        splitTimeline.to(textElement.querySelectorAll('span'), {
-            x: 0,
-            y: 0,
-            opacity: 1,
-            stagger: 0.1,
-            duration: 1,
-            ease: 'power3.out'
-        });
-
-        // 指定视窗口
-        function handleTextAnimation(entries, observer) {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    splitTimeline.play(); // 入视口时播放动画
-                    observer.unobserve(entry.target); // 停止观察
-                }
-            });
-        }
-
-        // 50%可见时触发
-        const textAnimationObserver = new IntersectionObserver(handleTextAnimation, {
-            threshold: 0.5
-        });
-
-        // 观察当前 textanimation 元素
-        textAnimationObserver.observe(textElement);
+    // 50%可见时触发
+    const textAnimationObserver = new IntersectionObserver(handleTextAnimation, {
+        threshold: 0.5
     });
+
+    // 观察当前 textanimation 元素
+    textAnimationObserver.observe(textElement);
+});
     
   // アニメーション　FadeInUp
     ScrollReveal().reveal('.timeline-item', { 

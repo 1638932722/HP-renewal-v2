@@ -11,6 +11,37 @@ document.addEventListener("DOMContentLoaded", function() {
     mainContent.style.display = 'block';
     mainContent.style.opacity = 1; 
 
+  // テキストアニメーション
+  let textAnimationElements = document.querySelectorAll('.textanimation');
+  textAnimationElements.forEach(element => {
+      var split = new SplitText(element, {type: "chars"});
+      var splitTimeline = gsap.timeline({ paused: true });
+      splitTimeline.from(split.chars, {
+          duration: 0.7, 
+          y: 100, 
+          autoAlpha: 0, 
+          stagger: 0.03
+      });
+
+      // IntersectionObserver回调
+      function handleTextAnimation(entries, observer) {
+          entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                  splitTimeline.play(); // 进入视口时播放动画
+                  observer.unobserve(entry.target); // 动画触发后停止观察
+              }
+          });
+      }
+
+      // 50%可见时触发
+      let textAnimationObserver = new IntersectionObserver(handleTextAnimation, {
+          threshold: 0.5 
+      });
+
+      // 观察当前 textanimation 元素
+      textAnimationObserver.observe(element);
+  });
+    
   // アニメーション　FadeInUp
     ScrollReveal().reveal('.timeline-item', { 
         distance: '100px',

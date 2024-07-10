@@ -12,16 +12,37 @@ document.addEventListener("DOMContentLoaded", function() {
     mainContent.style.opacity = 1; 
 
   // テキストアニメーション
-  let textAnimationElements = document.querySelectorAll('.textanimation');
-  textAnimationElements.forEach(element => {
-      var split = new SplitText(element, {type: "chars"});
-      var splitTimeline = gsap.timeline({ paused: true });
-      splitTimeline.from(split.chars, {
-          duration: 0.7, 
-          y: 100, 
-          autoAlpha: 0, 
-          stagger: 0.03
-      });
+  document.querySelectorAll('.textanimation').forEach(element => {
+    const text = element.textContent;
+    element.innerHTML = '';
+    const chars = text.split('').map(char => {
+        const span = document.createElement('span');
+        span.textContent = char;
+        span.classList.add('char');
+        element.appendChild(span);
+        return span;
+    });
+
+    const splitTimeline = gsap.timeline({ paused: true });
+    splitTimeline.from(chars, {
+        duration: 0.7,
+        y: 100,
+        autoAlpha: 0,
+        stagger: 0.03
+    });
+
+
+
+  // let textAnimationElements = document.querySelectorAll('.textanimation');
+  // textAnimationElements.forEach(element => {
+  //     var split = new SplitText(element, {type: "chars"});
+  //     var splitTimeline = gsap.timeline({ paused: true });
+  //     splitTimeline.from(split.chars, {
+  //         duration: 0.7, 
+  //         y: 100, 
+  //         autoAlpha: 0, 
+  //         stagger: 0.03
+  //     });
 
       // IntersectionObserver回调
       function handleTextAnimation(entries, observer) {

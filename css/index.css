@@ -551,10 +551,11 @@ footer a {
 }
 
 /* Background */
-/* .wave {
+.wave {
   width: 100%;
   overflow: hidden;
   line-height: 0;
+  transform: scaleY(-1);
 }
 
 .wave svg {
@@ -562,23 +563,7 @@ footer a {
   display: block;
   width: calc(100% + 110px);
   height: 110px;
-} */
-.wave svg {
-  position: relative;
-  display: block;
-  width: 100%;
-  height: 110px;
 }
-
-.wave {
-  width: 100%;
-  overflow: hidden;
-  line-height: 0;
-  margin: 0;
-  padding: 0;
-}
-
-
 
 @media (max-width: 1200px) { 
   .card{

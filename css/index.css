@@ -729,6 +729,13 @@ footer a {
     transform: translateX(-50%);
   }
 
+  /* Layer */
+#Layer{
+  transform: translateY(-1px);
+  z-index: -1;
+  height:300px;
+}
+
   /* 業者数カート */
   .num-grid {
     grid-template-columns: 1fr;
